@@ -6,7 +6,7 @@ pub struct Part2 {}
 // Terrible strategy: ask if the number is min, otherwise return max.
 impl Strategy for Part2 {
     fn guess_the_number(player: &mut Player, min: u32, max: u32) -> u32 {
-        let mut num: u32 = 8;
+        let mut num: u32 = max/2;
 
         loop {
         let guess_status = player.ask_to_compare(num);
