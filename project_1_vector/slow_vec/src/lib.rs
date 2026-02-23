@@ -60,8 +60,18 @@ impl<T> SlowVec<T> {
 
     // Student 1: Provide your solution here.
     pub fn push(&mut self, t: T) {
-<<<<<<< HEAD
-        todo!("Student 1 should implement this");
+        let old_len = self.len();
+        let mut tmp = FixedSizeArray::allocate(old_len+1);
+
+        for j in 0..old_len {
+           let val = self.fixed.move_out(j);
+           tmp.put(val,j)
+
+        }
+        tmp.put(t, old_len);
+        self.fixed = tmp;
+
+    }
     }
 
     // Student 2: Provide your solution here
@@ -87,41 +97,24 @@ impl<T> SlowVec<T> {
 // either skip the one that should be removed (in case of remove)
 // or add the new element to the end of tmp (in case of push)
 
-
+    
 // get rid of the old fixed field and replace it with tmp!
 self.fixed = tmp;
 
-=======
         // Create a new FixedSizeArray of a different length
         // If pushing, length should be old length + 1
         // Look at the code in `lib.rs`, is there some function
         // that can tell us what the old length is?
-        let old_len = self.len();
-        let mut tmp = FixedSizeArray::allocate(old_len+1);
-
-        for j in 0..old_len {
-           let val = self.fixed.move_out(j);
-           tmp.put(val,j)
-
-        }
-        tmp.put(t, old_len);
-        self.fixed = tmp;
-
-    }
+       
 
 // loop over self.fixed and move over its elements to tmp
 // add the new element to the end of tmp (in case of push)
-
+    }
 
 // get rid of the old fixed field and replace it with tmp!
 
     // Student 2: Provide your solution here
-    pub fn remove(&mut self, i: usize) {
-        todo!("Student 2 should implement this");
->>>>>>> george/std1
-    }
-}
-
+    
 
 // This allows us to print the SlowVec using println!().
 impl<T: Display> Display for SlowVec<T> {
