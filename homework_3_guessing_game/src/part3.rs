@@ -17,7 +17,11 @@ impl PlayerTrait for SimulatedPlayer {
      * The function should return false otherwise.
      */
     fn ask_if_equal(&mut self, guess: u32) -> bool {
-        todo!("you did not provide your part 3 solution yet!")
+        if guess == self.the_number {
+            return true
+        } else {
+            return false
+        }
     }
     /**
      * This function compares the guess to the number that the player has in mind.
@@ -27,7 +31,13 @@ impl PlayerTrait for SimulatedPlayer {
      * 1 if the number > guess
      */
     fn ask_to_compare(&mut self, guess: u32) -> i32 {
-        todo!("you did not provide your part 3 solution yet!")
+        if guess == self.the_number {
+            return 0
+        } else if guess > self.the_number {
+            return -1
+        } else {
+            return 1
+        }
     }
 }
 
@@ -47,8 +57,8 @@ mod part1_tests {
         let number = min;
 
         // We create a simulated player
-        let mut player = Player::new(SimulatedPlayer::new(number));
-        let answer = Part1::guess_the_number(&mut player, min, max);
+        let mut player = Player::new(SimulatedPlayer::new(number));// give player a number
+        let answer = Part1::guess_the_number(&mut player, min, max); //assign the player with number to strategy
         assert_eq!(answer, number);
         assert_eq!(player.steps(), 1);
     }
@@ -110,19 +120,21 @@ mod bad_strategy_tests {
         // We create a simulated player
         let mut player = Player::new(SimulatedPlayer::new(number));
         let answer = BadStrategy::guess_the_number(&mut player, min, max);
+
         assert_eq!(answer, number);
     }
 
     #[test]
+    #[should_panic]
     fn a_different_number() {
         let min = 0;
         let max = 100;
-        let number = todo!("`the_min` and `the_max` are not enough: the `BadStrategy` satisfies them, even though it is wrong. Add your own test that demonstrate that BadStrategy does not work!");
-
-        // We create a simulated player
+        let number = 50;
+        
         let mut player = Player::new(SimulatedPlayer::new(number));
-        let answer = BadStrategy::guess_the_number(&mut player, min, max);
+        let answer: u32 = BadStrategy::guess_the_number(&mut player, min, max);
         assert_eq!(answer, number);
+        assert!(player.steps() <= max); 
     }
 }
 
@@ -142,16 +154,38 @@ mod part2_tests {
     // Look at part1_tests for inspiration.
     #[test]
     fn the_min() {
-        todo!("add your tests for part2");
+        let min = 0;
+        let max = 100;
+        let number = min;
+
+        // We create a simulated player
+        let mut player = Player::new(SimulatedPlayer::new(number));// give player a number
+        let answer = Part2::guess_the_number(&mut player, min, max); //assign the player with number to strategy
+        assert_eq!(answer, number);
+        assert!(player.steps() <= (max/2));
     }
 
     #[test]
     fn the_max() {
-        todo!("add your tests for part2");
+        let min = 0;
+        let max = 100;
+        let number = max-1;
+
+        let mut player = Player::new(SimulatedPlayer::new(number));// give player a number
+        let answer = Part2::guess_the_number(&mut player, min, max); //assign the player with number to strategy
+        assert_eq!(answer, number);
+        assert!(player.steps() <= max/2);
     }
 
     #[test]
     fn a_different_number() {
-        todo!("Add your tests for part2!");
+        let min = 0;
+        let max = 100;
+        let number = 50;
+
+        let mut player = Player::new(SimulatedPlayer::new(number));// give player a number
+        let answer = Part2::guess_the_number(&mut player, min, max); //assign the player with number to strategy
+        assert_eq!(answer, number);
+        assert!(player.steps() <= max/2);
     }
 }
