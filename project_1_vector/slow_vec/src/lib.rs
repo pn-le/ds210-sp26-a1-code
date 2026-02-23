@@ -14,11 +14,12 @@ pub struct SlowVec<T> {
 
 // Functions inside SlowVec.
 impl<T> SlowVec<T> {
-    pub fn new() -> Self {
+    pub fn new() ->  Self {
         return SlowVec {
             fixed: FixedSizeArray::allocate(0)
         };
     }
+        
     
     // returns the length of the SlowVec.
     pub fn len(&self) -> usize {
@@ -54,7 +55,7 @@ impl<T> SlowVec<T> {
     // Think of a reference as a read-only "copy" of the element.
     // We will talk about what references are in class.
     // Note: the element remains stored in the SlowVec after get(). It is not removed.
-    pub fn get(&self, i: usize) -> &T {
+    pub fn get(& self, i: usize) -> &T {
         self.fixed.get(i)
     }
 
@@ -72,7 +73,7 @@ impl<T> SlowVec<T> {
         self.fixed = tmp;
 
     }
-    }
+    
 
     // Student 2: Provide your solution here
     pub fn remove(&mut self, i: usize) {
@@ -115,10 +116,11 @@ self.fixed = tmp;
 
     // Student 2: Provide your solution here
     
-
+}
 // This allows us to print the SlowVec using println!().
 impl<T: Display> Display for SlowVec<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "SlowVec({})", self.fixed)
     }
 }
+
