@@ -14,11 +14,12 @@ pub struct SlowVec<T> {
 
 // Functions inside SlowVec.
 impl<T> SlowVec<T> {
-    pub fn new() -> Self {
+    pub fn new() ->  Self {
         return SlowVec {
             fixed: FixedSizeArray::allocate(0)
         };
     }
+        
     
     // returns the length of the SlowVec.
     pub fn len(&self) -> usize {
@@ -54,22 +55,68 @@ impl<T> SlowVec<T> {
     // Think of a reference as a read-only "copy" of the element.
     // We will talk about what references are in class.
     // Note: the element remains stored in the SlowVec after get(). It is not removed.
-    pub fn get(&self, i: usize) -> &T {
+    pub fn get(& self, i: usize) -> &T {
         self.fixed.get(i)
     }
 
     // Student 1: Provide your solution here.
     pub fn push(&mut self, t: T) {
-        todo!("Student 1 should implement this");
+        let old_len = self.len();
+        let mut tmp = FixedSizeArray::allocate(old_len+1);
+
+        for j in 0..old_len {
+           let val = self.fixed.move_out(j);
+           tmp.put(val,j)
+
+        }
+        tmp.put(t, old_len);
+        self.fixed = tmp;
+
     }
+    
 
     // Student 2: Provide your solution here
     pub fn remove(&mut self, i: usize) {
-        todo!("Student 2 should implement this");
+        let mut tmp = FixedSizeArray::allocate(self.len()-1);
+        for j in 0..self.len() {
+            if j < i {
+                tmp.put(self.fixed.move_out(j), j);
+            } else if j > i {
+                tmp.put(self.fixed.move_out(j), j-1);
+            }
+        }
+        //use .put to put the elements from self.fixed to tmp, except for the one at index i
+        //use .moveout to move the elements from self.fixed to tmp, except for the one at index i
+
+// Create a new FixedSizeArray of a different length
+// If pushing, length should be old length + 1
+// If removing, length should be old length - 1
+// Look at the code in `lib.rs`, is there some function
+// that can tell us what the old length is?
+
+// loop over self.fixed and move over its elements to tmp
+// either skip the one that should be removed (in case of remove)
+// or add the new element to the end of tmp (in case of push)
+
+    
+// get rid of the old fixed field and replace it with tmp!
+self.fixed = tmp;
+
+        // Create a new FixedSizeArray of a different length
+        // If pushing, length should be old length + 1
+        // Look at the code in `lib.rs`, is there some function
+        // that can tell us what the old length is?
+       
+
+// loop over self.fixed and move over its elements to tmp
+// add the new element to the end of tmp (in case of push)
     }
+
+// get rid of the old fixed field and replace it with tmp!
+
+    // Student 2: Provide your solution here
+    
 }
-
-
 // This allows us to print the SlowVec using println!().
 impl<T: Display> Display for SlowVec<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
