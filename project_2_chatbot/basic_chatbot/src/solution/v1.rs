@@ -16,8 +16,12 @@ impl ChatbotV1 {
         let mut chat_session: Chat<Llama> = self.model
             .chat()
             .with_system_prompt("The assistant will act like a Vietnamese child");
+        let asynchronous_output = chat_session.add_message(message);
+        let output = asynchronous_output.await;
+        
+        return output.unwrap();
+        
+        return String::from("Hello, I am not a bot (yet)!");
 
-        return chat_session.add_message(message).await.unwrap();
-    }
 }
-//hello 
+}
