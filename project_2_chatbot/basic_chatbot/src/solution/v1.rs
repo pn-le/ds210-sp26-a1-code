@@ -11,7 +11,7 @@ impl ChatbotV1 {
         return ChatbotV1 { model: model };
     }
 
-    #[allow(dead_code)]     
+    #[allow(dead_code)] 
     pub async fn chat_with_user(&mut self, message: String) -> String { //async is large function so lets subsequent functions run asw
         //takes 2 arguements, one for the chatbot and another for the user msg to chatbot
         let mut chat_session: Chat<Llama> = self.model //selects the model
