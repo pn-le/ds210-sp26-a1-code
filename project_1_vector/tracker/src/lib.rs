@@ -61,10 +61,13 @@ impl Tracker {
             println!("");
         }
     }
+<<<<<<< HEAD
 
     pub fn tracked_count(&self) -> usize {
         return self.map.len();
     }
+=======
+>>>>>>> origin/submission1
 }
 
 
