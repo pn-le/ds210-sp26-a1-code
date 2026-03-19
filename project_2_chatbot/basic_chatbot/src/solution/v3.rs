@@ -1,5 +1,5 @@
 use kalosm::language::*;
-use std::collections::HashMap; 
+use std::collections::HashMap;
 
 #[allow(dead_code)]
 pub struct ChatbotV3 {
@@ -11,7 +11,6 @@ pub struct ChatbotV3 {
     // Think of some kind of data structure that can help you with this.
     model: Llama,
     sessions: HashMap<String, Chat<Llama>>,
-
 }
 
 impl ChatbotV3 {
@@ -19,6 +18,8 @@ impl ChatbotV3 {
     pub fn new(model: Llama) -> ChatbotV3 {
         return ChatbotV3 {
             // Make sure you initialize your struct members here
+            model,
+            sessions: HashMap::new(),
         };
     }
 
@@ -28,8 +29,39 @@ impl ChatbotV3 {
         // Notice, you are given both the `message` and also the `username`.
         // Use this information to select the correct chat session for that user and keep it
         // separated from the sessions of other users.
+
+
+        // Check if user exists
+        if self.sessions.contains_key(&username) {
+        // if true, then pass
+        } else {
+        // User does not exist, initialise a new session
+        let new_session = self.model
+            .chat()
+            .with_system_prompt("The assistant will act like a really annoying child");
+
+        //this inserts the new name into the new session initialised above. 
+        //must clone the username so the username can be recalled, otherwise it would be MOVED (reference changes)
+        self.sessions.insert(username.clone(), new_session); //new session is in self.session
+
+        }
+        //get the reference to the session that is called by the &username.
+        //need get_mut so we can change the sessions 
+        //(remember hashmap when call key, we get the value, and we want to change the value)
+        let chat_session = self.sessions.get_mut(&username).unwrap();
+        
+        //same as v2 here
+        let asynchronous_output = chat_session.add_message(message); 
+        //specify which object in the struct to call to .add_message
+        let output = asynchronous_output.await;
+        return output.unwrap(); //extracts the success value, or crashes the program if there's an error
+
         return String::from("Hello, I am not a bot (yet)!");
     }
+
+
+
+
 
     #[allow(dead_code)]
     pub fn get_history(&self, username: String) -> Vec<String> {
