@@ -25,19 +25,28 @@ impl ChatbotV3 {
 
     #[allow(dead_code)]
     pub async fn chat_with_user(&mut self, username: String, message: String) -> String {
-        // Add your code for chatting with the agent while keeping conversation history here.
-        // Notice, you are given both the `message` and also the `username`.
-        // Use this information to select the correct chat session for that user and keep it
-        // separated from the sessions of other users.
-        return String::from("Hello, I am not a bot (yet)!");
+        if !self.sessions.contains_key(&username) {
+            let chat_session = self.model
+                .chat()
+                .with_system_prompt("The assistant will act like a Vietnamese grandpa");
+            self.sessions.insert(username.clone(), chat_session);
+        }
+
+        let chat_session = self.sessions.get_mut(&username).unwrap();
+        let response = chat_session.add_message(message).await.unwrap();
+        response.to_string()
+        
     }
 
     #[allow(dead_code)]
     pub fn get_history(&self, username: String) -> Vec<String> {
-        // Extract the chat message history for the given username
-        // Hint: think of how you can retrieve the Chat object for that user, when you retrieve it
-        // you may want to use https://docs.rs/kalosm/0.4.0/kalosm/language/struct.Chat.html#method.session
-        // to then retrieve the history!
+       if let Some(chat_session) = self.sessions.get(&username) {
+            return chat_session.session().unwrap().history()
+                .iter()
+                .filter(|m| m.role() != MessageType::SystemPrompt)
+                .map(|m| m.content().to_string())
+                .collect();
+        }
         return Vec::new();
     }
 }
