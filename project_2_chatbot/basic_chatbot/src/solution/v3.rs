@@ -65,10 +65,13 @@ impl ChatbotV3 {
 
     #[allow(dead_code)]
     pub fn get_history(&self, username: String) -> Vec<String> {
-        // Extract the chat message history for the given username
-        // Hint: think of how you can retrieve the Chat object for that user, when you retrieve it
-        // you may want to use https://docs.rs/kalosm/0.4.0/kalosm/language/struct.Chat.html#method.session
-        // to then retrieve the history!
+       if let Some(chat_session) = self.sessions.get(&username) {
+            return chat_session.session().unwrap().history()
+                .iter()
+                .filter(|m| m.role() != MessageType::SystemPrompt)
+                .map(|m| m.content().to_string())
+                .collect();
+        }
         return Vec::new();
     }
 }
