@@ -18,7 +18,15 @@ pub fn save_chat_session_to_file(filename: &str, session: &LlamaChatSession) {
 
 // Implement this
 pub fn load_chat_session_from_file(filename: &str) -> Option<LlamaChatSession> {
-    // look at fs::read(...)
-    // also look at LlamaChatSession::from_bytes(...)
-    unimplemented!("Loading chat session from file {filename}");
+    // using option so that can return none if the loading fails (chats idea)
+    let bytes = fs::read(filename).ok()?;
+    //takes the bytes from the 'filename' and stores bytes in variable, if 'filename' doesn't exist return None
+    //the ok() converts the result into an option, and the ? converts the option into a value
+    // we need type to be bytes in order to put into from_bytes so .ok()? is necessary
+    let session = LlamaChatSession::from_bytes(&bytes).ok()?;
+    // converts the raw bytes into a LlamaChatSession object (stores conversation history)
+    //stores the LlamaChatSession object in session
+    //if this fails, return None
+    Some(session)
+    //if both succeed,
 }
